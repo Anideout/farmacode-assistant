@@ -1,8 +1,25 @@
+import { useState } from "react";
 import { Search, User, Lightbulb, ShieldCheck } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { medications } from "@/data/medications";
+import type { Medication } from "@/data/medications";
+import MedicationDialog from "@/components/MedicationDialog";
 
-const recentSearches = ["Sertralina 50mg", "Atorvastatina", "Losartán 5..."];
+const recentSearches = [
+  { label: "Sertralina 50mg", id: "sertralina-50" },
+  { label: "Atorvastatina 20mg", id: "atorvastatina-20" },
+  { label: "Losartán 50mg", id: "losartan-50" },
+];
 
 const Dashboard = () => {
+  const navigate = useNavigate();
+  const [selected, setSelected] = useState<Medication | null>(null);
+
+  const handlePillClick = (id: string) => {
+    const med = medications.find((m) => m.id === id);
+    if (med) setSelected(med);
+  };
+
   return (
     <div className="flex flex-col px-5 pt-6">
       {/* Header */}
@@ -11,9 +28,12 @@ const Dashboard = () => {
           <p className="text-muted-foreground text-sm">Hola 👋</p>
           <h1 className="text-xl font-bold text-foreground">UsuarioFarmaCode</h1>
         </div>
-        <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center">
+        <button
+          onClick={() => navigate("/profile")}
+          className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center hover:bg-secondary/80 transition-colors"
+        >
           <User className="w-5 h-5 text-secondary-foreground" />
-        </div>
+        </button>
       </div>
 
       {/* Logo */}
@@ -41,12 +61,13 @@ const Dashboard = () => {
         </p>
         <div className="flex gap-2 flex-wrap">
           {recentSearches.map((s) => (
-            <span
-              key={s}
-              className="px-3 py-1.5 rounded-full bg-secondary text-secondary-foreground text-xs font-medium"
+            <button
+              key={s.id}
+              onClick={() => handlePillClick(s.id)}
+              className="px-3 py-1.5 rounded-full bg-secondary text-secondary-foreground text-xs font-medium hover:bg-secondary/70 transition-colors"
             >
-              {s}
-            </span>
+              {s.label}
+            </button>
           ))}
         </div>
       </div>
@@ -72,6 +93,12 @@ const Dashboard = () => {
         App únicamente informativa. No reemplaza una receta médica ni constituye
         consejo profesional de salud.
       </p>
+
+      <MedicationDialog
+        medication={selected}
+        open={!!selected}
+        onOpenChange={(open) => !open && setSelected(null)}
+      />
     </div>
   );
 };

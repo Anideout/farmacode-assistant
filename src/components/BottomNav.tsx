@@ -1,4 +1,4 @@
-import { Home, ScanLine, MessageCircle, HelpCircle } from "lucide-react";
+import { Home, ScanLine, MessageCircle, HelpCircle, User } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const tabs = [
@@ -6,6 +6,7 @@ const tabs = [
   { path: "/scanner", label: "Escanear", icon: ScanLine },
   { path: "/chat", label: "Consultas", icon: MessageCircle },
   { path: "/help", label: "Ayuda", icon: HelpCircle },
+  { path: "/profile", label: "Perfil", icon: User },
 ];
 
 const BottomNav = () => {
@@ -21,12 +22,12 @@ const BottomNav = () => {
             <button
               key={tab.path}
               onClick={() => navigate(tab.path)}
-              className={`flex flex-col items-center gap-1 px-4 py-2 transition-colors ${
+              className={`flex flex-col items-center gap-1 px-3 py-2 transition-colors ${
                 active ? "text-nav-active" : "text-nav-foreground"
               }`}
             >
               <tab.icon className={`w-5 h-5 ${active ? "stroke-[2.5]" : ""}`} />
-              <span className="text-[11px] font-medium">{tab.label}</span>
+              <span className="text-[10px] font-medium">{tab.label}</span>
             </button>
           );
         })}
