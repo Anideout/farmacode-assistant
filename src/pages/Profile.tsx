@@ -3,6 +3,7 @@ import { User, Clock, ChevronRight } from "lucide-react";
 import { medications } from "@/data/medications";
 import type { Medication } from "@/data/medications";
 import MedicationDialog from "@/components/MedicationDialog";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const searchHistory = [
   { medication: medications[0], date: "Hoy, 14:32" },
@@ -27,6 +28,11 @@ const Profile = () => {
           <p className="font-bold text-foreground">UsuarioFarmaCode</p>
           <p className="text-xs text-muted-foreground">usuario@farmacode.cl</p>
         </div>
+      </div>
+
+      {/* Theme Toggle */}
+      <div className="mb-6">
+        <ThemeToggle />
       </div>
 
       {/* Stats */}
