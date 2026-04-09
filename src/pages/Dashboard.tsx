@@ -1,19 +1,33 @@
-import { useState } from "react";
-import { Search, Lightbulb, ShieldCheck } from "lucide-react";
+import { useState, useMemo } from "react";
+import { Search, Lightbulb, ShieldCheck, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { medications } from "@/data/medications";
 import type { Medication } from "@/data/medications";
 import MedicationDialog from "@/components/MedicationDialog";
 
-const recentSearches = [
-  { label: "Sertralina 50mg", id: "sertralina-50" },
-  { label: "Atorvastatina 20mg", id: "atorvastatina-20" },
-  { label: "Losartán 50mg", id: "losartan-50" },
-];
-
 const Dashboard = () => {
   const navigate = useNavigate();
   const [selected, setSelected] = useState<Medication | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+
+  // Obtener categorías únicas
+  const categories = useMemo(
+    () => Array.from(new Set(medications.map((m) => m.category))).sort(),
+    []
+  );
+
+  // Filtrar medicamentos
+  const filteredMedications = useMemo(() => {
+    return medications.filter((med) => {
+      const matchesSearch =
+        med.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        med.activeIngredient.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesCategory =
+        selectedCategory === null || med.category === selectedCategory;
+      return matchesSearch && matchesCategory;
+    });
+  }, [searchTerm, selectedCategory]);
 
   const handlePillClick = (id: string) => {
     const med = medications.find((m) => m.id === id);
@@ -21,11 +35,11 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="flex flex-col px-5 pt-6">
+    <div className="flex flex-col px-5 pt-6 pb-24">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <p className="text-muted-foreground text-sm">Hola</p>
+          <p className="text-muted-foreground text-sm">¡Hola! ¿En qué puedo ayudarte?</p>
         </div>
       </div>
 
@@ -38,30 +52,77 @@ const Dashboard = () => {
       </div>
 
       {/* Search */}
-      <div className="relative mb-8">
+      <div className="relative mb-4">
         <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
         <input
           type="text"
           placeholder="Busca un medicamento..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
           className="w-full h-12 pl-11 pr-4 rounded-xl bg-secondary text-secondary-foreground placeholder:text-muted-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 transition-shadow"
         />
       </div>
 
-      {/* Recent Searches */}
-      <div className="mb-8">
-        <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-3">
-          Búsquedas recientes
-        </p>
+      {/* Categories Filter */}
+      <div className="mb-6">
         <div className="flex gap-2 flex-wrap">
-          {recentSearches.map((s) => (
+          <button
+            onClick={() => setSelectedCategory(null)}
+            className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
+              selectedCategory === null
+                ? "bg-primary text-primary-foreground"
+                : "bg-secondary text-secondary-foreground hover:bg-secondary/70"
+            }`}
+          >
+            Todos
+          </button>
+          {categories.map((category) => (
             <button
-              key={s.id}
-              onClick={() => handlePillClick(s.id)}
-              className="px-3 py-1.5 rounded-full bg-secondary text-secondary-foreground text-xs font-medium hover:bg-secondary/70 transition-colors"
+              key={category}
+              onClick={() => setSelectedCategory(category)}
+              className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
+                selectedCategory === category
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-secondary text-secondary-foreground hover:bg-secondary/70"
+              }`}
             >
-              {s.label}
+              {category}
             </button>
           ))}
+        </div>
+      </div>
+
+      {/* Medications List */}
+      <div className="mb-8">
+        <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-3">
+          Medicamentos ({filteredMedications.length})
+        </p>
+        <div className="flex flex-col gap-2">
+          {filteredMedications.length > 0 ? (
+            filteredMedications.map((med) => (
+              <button
+                key={med.id}
+                onClick={() => handlePillClick(med.id)}
+                className="p-3 rounded-lg bg-secondary text-secondary-foreground hover:bg-secondary/70 transition-colors text-left"
+              >
+                <div className="flex items-start justify-between">
+                  <div>
+                    <p className="text-sm font-semibold">{med.name}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {med.activeIngredient} • {med.laboratory}
+                    </p>
+                  </div>
+                  <span className="text-xs px-2 py-1 rounded bg-primary/10 text-primary font-medium">
+                    {med.type}
+                  </span>
+                </div>
+              </button>
+            ))
+          ) : (
+            <p className="text-sm text-muted-foreground text-center py-4">
+              No se encontraron medicamentos
+            </p>
+          )}
         </div>
       </div>
 
