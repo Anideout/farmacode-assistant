@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Search, User, Lightbulb, ShieldCheck } from "lucide-react";
+import { Search, Lightbulb, ShieldCheck } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { medications } from "@/data/medications";
 import type { Medication } from "@/data/medications";
@@ -26,14 +26,7 @@ const Dashboard = () => {
       <div className="flex items-center justify-between mb-6">
         <div>
           <p className="text-muted-foreground text-sm">Hola</p>
-          <h1 className="text-xl font-bold text-foreground">UsuarioFarmaCode</h1>
         </div>
-        <button
-          onClick={() => navigate("/profile")}
-          className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center hover:bg-secondary/80 transition-colors"
-        >
-          <User className="w-5 h-5 text-secondary-foreground" />
-        </button>
       </div>
 
       {/* Logo */}

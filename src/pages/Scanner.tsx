@@ -6,7 +6,9 @@ const Scanner = () => {
       {/* Header */}
       <div className="text-center pt-8 z-10">
         <h2 className="text-lg font-bold text-foreground">Escanear medicamento</h2>
-        <p className="text-sm text-muted-foreground mt-1">Encuadra el nombre del medicamento</p>
+        <p className="text-sm text-muted-foreground mt-1">
+          Encuadra el nombre del medicamento
+        </p>
       </div>
 
       {/* Viewfinder */}
@@ -27,7 +29,7 @@ const Scanner = () => {
       {/* Detected text pill */}
       <div className="px-4 py-2 rounded-full bg-primary/20 border border-primary/30 mb-4">
         <span className="text-sm text-primary font-medium">
-           Texto detectado: Sertralina 50mg
+          Texto detectado: Sertralina 50mg
         </span>
       </div>
 
