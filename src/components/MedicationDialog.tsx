@@ -24,17 +24,16 @@ const MedicationDialog = ({ medication, open, onOpenChange }: Props) => {
         <div className="flex gap-2 flex-wrap">
           {medication.certISP && (
             <Badge className="bg-primary/20 text-primary border-0 text-[11px]">
-              🟢 Cert. ISP
+              Cert. ISP
             </Badge>
           )}
           <Badge
-            className={`border-0 text-[11px] ${
-              medication.type === "Referencia"
+            className={`border-0 text-[11px] ${medication.type === "Referencia"
                 ? "bg-secondary text-secondary-foreground"
                 : medication.type === "Genérico"
-                ? "bg-accent/20 text-accent"
-                : "bg-primary/20 text-primary"
-            }`}
+                  ? "bg-accent/20 text-accent"
+                  : "bg-primary/20 text-primary"
+              }`}
           >
             {medication.type}
           </Badge>
